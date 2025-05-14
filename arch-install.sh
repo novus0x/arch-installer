@@ -100,47 +100,42 @@ echo "[!] Deleting partitions in $DISK..."
 PART_TABLE=$(parted -s "$DISK" print | grep 'Partition Table' | awk '{print $3}')
 echo "[+] Partition table: $PART_TABLE"
 sgdisk -z "$DISK"
-INDEX = 1
-PREFIX = "${DISK}"
+INDEX=1
+PREFIX="${DISK}"
 
 # Create new partitions
 if [ "$BOOT_MODE" = "BIOS" ] && [ "$PART_TABLE" = "gpt" ]; then
-	echo "[+] Creando BIOS Boot partition (ef02)"
-	sgdisk -n ${INDEX}:0:+1M -t ${INDEX}:ef02 -c ${INDEX}:"BIOS Boot" "$DISK"
-	INDEX=$((INDEX + 1))
-fi
-
-# EFI
-if [ "$BOOT_MODE" = "UEFI" ]; then
-	echo "[+] Creating EFI partition (ef00)"
-	sgdisk -n ${INDEX}:0:+512M -t ${INDEX}:ef00 -c ${INDEX}:"EFI System" "$DISK"
+	echo "[+] Creting BIOS Boot partition (ef02)"
+	sgdisk -n ${INDEX}:0:+${BOOT_SIZE}M -t ${INDEX}:ef02 "$DISK"
 	BOOT_PART=$INDEX
 	INDEX=$((INDEX + 1))
 elif [ "$BOOT_MODE" = "BIOS" ]; then
 	echo "[+] Creating /boot partition (8300)"
-	sgdisk -n ${INDEX}:0:+512M -t ${INDEX}:8300 -c ${INDEX}:"Boot" "$DISK"
+	sgdisk -n ${INDEX}:0:+${BOOT_SIZE} -t ${INDEX}:8300 "$DISK"
 	BOOT_PART=$INDEX
 	INDEX=$((INDEX + 1))
-else
-	echo "[!] Error, aborting."
-	exit 1
+elif [ "$BOOT_MODE" = "UEFI" ]; then
+	echo "[+] Creating EFI partition (ef00)"
+	sgdisk -n ${INDEX}:0:+${BOOT_SIZE}M -t ${INDEX}:ef00 "$DISK"
+	BOOT_PART=$INDEX
+	INDEX=$((INDEX + 1))
 fi
 
 # Swap
 echo "[+] Creating swap partition (8200)"
-sgdisk -n ${INDEX}:0:${SWAP_SIZE}M -t ${INDEX}:8200 -c ${INDEX}:"Swap" "$DISK"
+sgdisk -n ${INDEX}:0:+${SWAP_SIZE}M -t ${INDEX}:8200 "$DISK"
 SWAP_PART=$INDEX
 INDEX=$((INDEX + 1))
 
 # Root
 echo "[+] Creating root partition (8300)"
-sgdisk -n ${INDEX}:0:${ROOT_SIZE}G -t ${INDEX}:8300 -c ${INDEX}:"Root" "$DISK"
+sgdisk -n ${INDEX}:0:+${ROOT_SIZE}G -t ${INDEX}:8300 "$DISK"
 ROOT_PART=$INDEX
 INDEX=$((INDEX + 1))
 
 # Home
 echo "[+] Creating home partition (8302)"
-sgdisk -n ${INDEX}:0:0 -t ${INDEX}:8302 -c ${INDEX}:"Home" "$DISK"
+sgdisk -n ${INDEX}:0:0 -t ${INDEX}:8302 "$DISK"
 HOME_PART=$INDEX
 
 BOOT="${PREFIX}${BOOT_PART}"
