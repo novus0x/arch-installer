@@ -73,7 +73,7 @@ lsblk "$DISK"
 echo
 
 # Show disk space
-DISK_SIZE=$(lsblk -bno SIZE "$DISK")
+DISK_SIZE=$(blockdev --getsize64 "$DISK")
 DISK_SIZE_GB=$((DISK_SIZE / 1024 / 1024 / 1024))
 echo "[+] Total disk space: $DISK_SIZE_GB GB"
 

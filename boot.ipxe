@@ -1,9 +1,0 @@
-#!ipxe
-dhcp
-
-set base-url https://geo.mirror.pkgbuild.com/iso/latest
-
-kernel ${base-url}/arch/boot/x86_64/vmlinuz-linux
-initrd ${base-url}/arch/boot/x86_64/initramfs-linux.img
-boot
-
