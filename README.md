@@ -55,7 +55,7 @@ These packages are installed during the minimal installation:
 2. From the live environment, download the script:
 
 ```bash
-curl -O {url}
+curl -O https://raw.githubusercontent.com/novus0x/arch-installer/refs/heads/main/arch-install.sh
 chmod +x arch-install.sh
 ./arch-install.sh
 ```

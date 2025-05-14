@@ -37,7 +37,7 @@ while true; do
 	echo "[?] Confirm user password: "
 	read -s USERPASS2
 	[ "$USERPASS1" = "$USERPASS2" ] && USERPASS="$USERPASS1" && break
-	ECHO "[-] The passwords don't match. Please try again."
+	echo "[-] The passwords don't match. Please try again."
 done
 echo
 
@@ -48,7 +48,7 @@ while true; do
 	echo "[?] Confirm root password: "
 	read -s ROOTPASS2
 	[ "$ROOTPASS1" = "$ROOTPASS2" ] && ROOTPASS="$ROOTPASS1" && break
-	ECHO "[-] The passwords don't match. Please try again."
+	echo "[-] The passwords don't match. Please try again."
 done
 echo
 
@@ -58,7 +58,7 @@ loadkeys "$KEYMAP"
 read -p "[?] Are you using a laptop? (y/n): " SET_WIFI
 
 # Instalation type
-echo "[?] Instalation type:"
+echo "[?] Installation type:"
 echo "  1) Traditional"
 echo "  2) Customized by Novus0x"
 read -p "Select [1/2]: " INSTALL_TYPE
@@ -75,7 +75,7 @@ echo
 # Show disk space
 DISK_SIZE=$(lsblk -bno SIZE "$DISK")
 DISK_SIZE_GB=$((DISK_SIZE / 1024 / 1024 / 1024))
-echo "[+] Tamaño total del disco: $DISK_SIZE_GB GB"
+echo "[+] Total disk space: $DISK_SIZE_GB GB"
 
 # Assign space
 read -p "[?] Boot partition size (in MB, default 512): " BOOT_SIZE
@@ -92,7 +92,7 @@ echo "- EFI/BOOT: $BOOT_SIZE MB"
 echo "- SWAP: $SWAP_SIZE MB"
 echo "- ROOT: $ROOT_SIZE GB"
 echo "- HOME: Remaining available disk space"
-read -p "¿Confirmar particionado? (y/n): " confirm
+read -p "Confirm? (y/n): " confirm
 [[ "$confirm" != "y" ]] && exit 1
 
 echo "[!] Deleting partitions in $DISK..."
@@ -158,14 +158,14 @@ fi
 # Fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
 
+echo "[!] Please type: 'nano /etc/locale.gen' then select your prefer lenguaje, finally type 'exit'"
+echo 
+arch-chroot /mnt
+
 arch-chroot /mnt /bin/bash -e <<EOF
 hwclock -w
 echo "$KEYMAP" > /etc/vconsole.conf
 echo "$HOSTNAME" > /etc/hostname
-
-echo "[+] Opening /etc/locale.gen please select your locales..."
-sleep 1
-nano /etc/locale.gen
 
 echo "[+] Generating locales..."
 locale-gen
