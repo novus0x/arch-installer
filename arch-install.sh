@@ -92,29 +92,61 @@ echo "- EFI/BOOT: $BOOT_SIZE MB"
 echo "- SWAP: $SWAP_SIZE MB"
 echo "- ROOT: $ROOT_SIZE GB"
 echo "- HOME: Remaining available disk space"
-read -p "Confirm? (y/n): " confirm
+read -p "[?] Confirm? (y/n): " confirm
 [[ "$confirm" != "y" ]] && exit 1
 
 echo "[!] Deleting partitions in $DISK..."
-sgdisk -Z "$DISK"
+
+PART_TABLE=$(parted -s "$DISK" print | grep 'Partition Table' | awk '{print $3}')
+echo "[+] Partition table: $PART_TABLE"
+sgdisk -z "$DISK"
+INDEX = 1
+PREFIX = "${DISK}"
 
 # Create new partitions
-sgdisk -n 1:0:+${BOOT_SIZE}M -t 1:ef00 "$DISK"      # EFI/BOOT
-sgdisk -n 2:0:+${SWAP_SIZE}M -t 2:8200 "$DISK"      # SWAP
-sgdisk -n 3:0:+${ROOT_SIZE}G -t 3:8300 "$DISK"      # ROOT
-sgdisk -n 4:0:0 -t 4:8302 "$DISK"                   # HOME
-
-if [[ "$DISK" == *nvme* ]]; then
-	BOOT="${DISK}p1"
-	SWAP="${DISK}p2"
-	ROOT="${DISK}p3"
-	HOME="${DISK}p4"
-else
-	BOOT="${DISK}1"
-	SWAP="${DISK}2"
-	ROOT="${DISK}3"
-	HOME="${DISK}4"
+if [ "$BOOT_MODE" = "BIOS" ] && [ "$PART_TABLE" = "gpt" ]; then
+	echo "[+] Creando BIOS Boot partition (ef02)"
+	sgdisk -n ${INDEX}:0:+1M -t ${INDEX}:ef02 -c ${INDEX}:"BIOS Boot" "$DISK"
+	INDEX=$((INDEX + 1))
 fi
+
+# EFI
+if [ "$BOOT_MODE" = "UEFI" ]; then
+	echo "[+] Creating EFI partition (ef00)"
+	sgdisk -n ${INDEX}:0:+512M -t ${INDEX}:ef00 -c ${INDEX}:"EFI System" "$DISK"
+	BOOT_PART=$INDEX
+	INDEX=$((INDEX + 1))
+elif [ "$BOOT_MODE" = "BIOS" ]; then
+	echo "[+] Creating /boot partition (8300)"
+	sgdisk -n ${INDEX}:0:+512M -t ${INDEX}:8300 -c ${INDEX}:"Boot" "$DISK"
+	BOOT_PART=$INDEX
+	INDEX=$((INDEX + 1))
+else
+	echo "[!] Error, aborting."
+	exit 1
+fi
+
+# Swap
+echo "[+] Creating swap partition (8200)"
+sgdisk -n ${INDEX}:0:${SWAP_SIZE}M -t ${INDEX}:8200 -c ${INDEX}:"Swap" "$DISK"
+SWAP_PART=$INDEX
+INDEX=$((INDEX + 1))
+
+# Root
+echo "[+] Creating root partition (8300)"
+sgdisk -n ${INDEX}:0:${ROOT_SIZE}G -t ${INDEX}:8300 -c ${INDEX}:"Root" "$DISK"
+ROOT_PART=$INDEX
+INDEX=$((INDEX + 1))
+
+# Home
+echo "[+] Creating home partition (8302)"
+sgdisk -n ${INDEX}:0:0 -t ${INDEX}:8302 -c ${INDEX}:"Home" "$DISK"
+HOME_PART=$INDEX
+
+BOOT="${PREFIX}${BOOT_PART}"
+SWAP="${PREFIX}${SWAP_PART}"
+ROOT="${PREFIX}${ROOT_PART}"
+HOME="${PREFIX}${HOME_PART}"
 
 # Formatting partitions
 echo "[+] Formatting partitions..."
