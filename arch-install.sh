@@ -104,12 +104,12 @@ INDEX=1
 PREFIX="${DISK}"
 
 # Create new partitions
-if [ "$BOOT_MODE" = "BIOS" ] && [ "$PART_TABLE" = "gpt" ]; then
-	echo "[+] Creting BIOS Boot partition (ef02)"
-	sgdisk -n ${INDEX}:0:+${BOOT_SIZE}M -t ${INDEX}:ef02 "$DISK"
-	BOOT_PART=$INDEX
-	INDEX=$((INDEX + 1))
-elif [ "$BOOT_MODE" = "BIOS" ]; then
+if [ "$BOOT_MODE" = "BIOS" ]; then
+	if [ "$PART_TABLE" = "gpt" ]; then
+		echo "[+] Creating BIOS Boot partition (ef02)"
+		sgdisk -n ${INDEX}:0:+2M -t ${INDEX}:ef02 "$DISK"
+		INDEX=$((INDEX + 1))
+	fi
 	echo "[+] Creating /boot partition (8300)"
 	sgdisk -n ${INDEX}:0:+${BOOT_SIZE}M -t ${INDEX}:8300 "$DISK"
 	BOOT_PART=$INDEX
