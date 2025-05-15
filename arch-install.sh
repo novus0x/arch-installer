@@ -98,6 +98,13 @@ read -p "[?] Confirm? (y/n): " confirm
 echo "[!] Deleting partitions in $DISK..."
 
 sgdisk -z "$DISK"
+
+if [ "$PART_TABLE" = "gpt" ]; then
+	parted -s "$DISK" mklabel gpt
+else
+	parted -s "$DISK" mklabel msdos
+fi
+
 PART_TABLE=$(parted -s "$DISK" print | grep 'Partition Table' | awk '{print $3}')
 echo "[+] Partition table: $PART_TABLE"
 INDEX=1
