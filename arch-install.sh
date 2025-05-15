@@ -97,9 +97,9 @@ read -p "[?] Confirm? (y/n): " confirm
 
 echo "[!] Deleting partitions in $DISK..."
 
+sgdisk -z "$DISK"
 PART_TABLE=$(parted -s "$DISK" print | grep 'Partition Table' | awk '{print $3}')
 echo "[+] Partition table: $PART_TABLE"
-sgdisk -z "$DISK"
 INDEX=1
 PREFIX="${DISK}"
 
@@ -111,7 +111,7 @@ if [ "$BOOT_MODE" = "BIOS" ] && [ "$PART_TABLE" = "gpt" ]; then
 	INDEX=$((INDEX + 1))
 elif [ "$BOOT_MODE" = "BIOS" ]; then
 	echo "[+] Creating /boot partition (8300)"
-	sgdisk -n ${INDEX}:0:+${BOOT_SIZE} -t ${INDEX}:8300 "$DISK"
+	sgdisk -n ${INDEX}:0:+${BOOT_SIZE}M -t ${INDEX}:8300 "$DISK"
 	BOOT_PART=$INDEX
 	INDEX=$((INDEX + 1))
 elif [ "$BOOT_MODE" = "UEFI" ]; then
@@ -159,7 +159,7 @@ mkfs.ext4 "$HOME"
 
 # Mount
 mount "$ROOT" /mnt
-mkdir -p /mnt/home
+mkdir /mnt/home
 
 if [ "$BOOT_MODE" = "UEFI" ]; then
 	mkdir -p /mnt/boot/efi
@@ -178,7 +178,7 @@ else
 	pacstrap /mnt base base-devel grub os-prober ntfs-3g networkmanager gvfs gvfs-afc gvfs-mtp xdg-user-dirs linux linux-firmware nano dhcpcd zsh
 fi
 
-if [ "$SET_WIFI" ]; then
+if [ "$SET_WIFI" == "y" ]; then
 	pacstrap /mnt netctl wpa_supplicant dialog xf86-input-synaptics
 fi
 
@@ -205,13 +205,15 @@ echo "root:$ROOTPASS" | chpasswd
 echo "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers
 
 if [ "$BOOT_MODE" = "UEFI" ]; then
-    grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable
+	grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable
 else
-    grub-install "$DISK"
+	if [ ! -d /mnt/boot ]; then
+   		mkdir -p /mnt/boot
+	fi
+	grub-install "$DISK"
 fi
 
 grub-mkconfig -o /boot/grub/grub.cfg
-exit
 EOF
 
 if [ "$BOOT_MODE" = "UEFI" ]; then

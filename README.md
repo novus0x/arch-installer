@@ -33,7 +33,7 @@ These packages are installed during the minimal installation:
 
 ---
 
-## 🧠 Requirements (method 2)
+## 🧠 Requirements
 
 - **A bootable USB drive** with arch linux iso
 
