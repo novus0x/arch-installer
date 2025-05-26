@@ -55,8 +55,8 @@ echo
 
 # Check storage
 total_size=$(lsblk -b /dev/sda -o SIZE -n | head -n 1 )
-sizeMB=$((total_size / 1000000))
-sizeGB=$((total_size / 1000000000))
+sizeMB=$((total_size / 1048576))
+sizeGB=$((total_size / 1073741824))
 
 echo "[!] You have $sizeGB GB | $sizeMB MB | $total_size bytes (Check that it is correct with what appears below)"
 echo
@@ -83,11 +83,13 @@ else
     PROP="msdos"
 fi
 
+BOOT_SIZE=$((BOOT_SIZE + 1))
+
 parted -s $DISK mklabel $PROP
-parted -s $DISK mkpart primary ext4 1MB $BOOT_SIZE
-parted -s $DISK mkpart primary linux-swap $BOOT_SIZE $((BOOT_SIZE + SWAP_SIZE))
-parted -s $DISK mkpart primary ext4 $((BOOT_SIZE + SWAP_SIZE)) $((BOOT_SIZE + SWAP_SIZE + ROOT_SIZE))
-parted -s $DISK mkpart primary ext4 $((BOOT_SIZE + SWAP_SIZE + ROOT_SIZE)) 100%
+parted -s $DISK mkpart primary ext4 1MiB ${BOOT_SIZE}MiB
+parted -s $DISK mkpart primary linux-swap ${BOOT_SIZE}MiB $((BOOT_SIZE + SWAP_SIZE))MiB
+parted -s $DISK mkpart primary ext4 $((BOOT_SIZE + SWAP_SIZE))MiB $((BOOT_SIZE + SWAP_SIZE + ROOT_SIZE))MiB
+parted -s $DISK mkpart primary ext4 $((BOOT_SIZE + SWAP_SIZE + ROOT_SIZE))MiB 100%
 
 if [[ "$BOOT_MODE" == "UEFI" ]]; then
 	mkfs.vfat -F32 "${DISK}1"
@@ -96,6 +98,7 @@ else
 fi
 
 mkswap "${DISK}2"
+swapon "${DISK}2"
 mkfs.ext4 "${DISK}3"
 mkfs.ext4 "${DISK}4"
 
