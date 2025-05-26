@@ -150,14 +150,14 @@ echo "root:$ROOTPASS" | chpasswd
 echo "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers
 
 if [ "$BOOT_MODE" = "UEFI" ]; then
-	grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable
+	grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 else
 	grub-install "$DISK"
 fi
 grub-mkconfig -o /boot/grub/grub.cfg
 EOF
 
-if [ "$BOOT_MODE" = "UEFI" ]; then
+if [ "$BOOT_MODE" == "UEFI" ]; then
 	umount /mnt/boot/efi
 else
 	umount /mnt/boot
@@ -165,6 +165,10 @@ fi
 
 umount /mnt/home
 umount /mnt
+
+if [ "$BOOT_MODE" == "UEFI" ]; then
+	efibootmrg
+fi
 
 echo "[!] Please reboot the system"
 

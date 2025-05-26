@@ -4,10 +4,10 @@ This project provides an **automated Arch Linux installation script** designed t
 
 > ⚠️ Ideal for advanced or technical users who want to install Arch Linux quickly, with clean or custom installation options.
 
-[!] is currently under testing 
+[+] Tested on
 
-- Tested in BIOS [yes]
-- Tested in UEFI [no]
+- BIOS [yes]
+- UEFI [yes]
 
 ---
 
@@ -42,7 +42,23 @@ These packages are installed during the minimal installation:
 
 ---
 
-## 🧩 Installation and Use
+## 🧩 When to use the `--removable` option in GRUB
+
+The `--removable` option in the `grub-install` command should be used **only in specific scenarios**, mainly to ensure boot compatibility on systems where the UEFI firmware does not register boot entries, or when creating a **portable system**.
+
+**Use `--removable` only if:**
+
+- You are installing Arch Linux on a **bootable USB drive** or external disk.
+- Your system’s UEFI **does not retain boot entries** (e.g., minimal firmware or some budget laptops).
+- You need the system to **boot on multiple machines** without requiring UEFI configuration.
+
+**Do NOT use `--removable` if:**
+
+- You are installing Arch on a **main internal drive**.
+- You want the UEFI firmware to **create a persistent boot entry**.
+- Your system supports `efibootmgr` and UEFI boot entries correctly.
+
+## Recommended usage for most systems:
 
 1. Insert your USB drive with the ***Arch linux image***
 2. From the live environment:
@@ -52,3 +68,4 @@ curl -O https://raw.githubusercontent.com/novus0x/arch-installer/refs/heads/main
 chmod +x installer.sh
 ./arch-install.sh
 ```
+
