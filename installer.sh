@@ -26,6 +26,15 @@ fi
 
 # User settings
 echo
+echo "[!] Default KEYMAP: us"
+read -p "[?] Do you want to change it? [y/n]: " OPT
+
+if [[ "$OPT" == "y"]]
+	read -p "[?] New KEYMAP: " KEYMAP
+else
+	KEYMAP="us"
+fi
+
 read -p "[?] Are you in a laptop? [y/n]: " LAPTOP
 read -p "[?] Hostname: " HOSTNAME
 read -p "[?] USERNAME: " USERNAME
