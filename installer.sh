@@ -57,7 +57,7 @@ total_size=$(lsblk -b /dev/sda -o SIZE -n | head -n 1 )
 sizeMB=$((total_size / 1000000))
 sizeGB=$((total_size / 1000000000))
 
-echo "[!] You have $sizeGB GB | $sizeMB MB | $total_size bytes"
+echo "[!] You have $sizeGB GB | $sizeMB MB | $total_size bytes (Check that it is correct with what appears below)"
 echo
 lsblk
 echo
@@ -84,9 +84,18 @@ fi
 
 parted -s $DISK mklabel $PROP
 parted -s $DISK mkpart primary ext4 1MB $BOOT_SIZE
-parted -s $DISK mkpart linux-swap $BOOT_SIZE $((BOOT_SIZE + SWAP_SIZE))
+parted -s $DISK mkpart primary linux-swap $BOOT_SIZE $((BOOT_SIZE + SWAP_SIZE))
 parted -s $DISK mkpart primary ext4 $((BOOT_SIZE + SWAP_SIZE)) $((BOOT_SIZE + SWAP_SIZE + ROOT_SIZE))
 parted -s $DISK mkpart primary ext4 $((BOOT_SIZE + SWAP_SIZE + ROOT_SIZE)) 100%
 
+if [[ "$BOOT_MODE" == "UEFI" ]]; then
+	mkfs.vfat -F32 "${DISK}1"
+else
+	mkfs.ext2 "${DISK}1"
+fi
+
+mkswap "${DISK}2"
+mkfs.ext4 "${DISK}3"
+mkfs.ext4 "${DISK}4"
 
 
