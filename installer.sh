@@ -26,6 +26,7 @@ fi
 
 # User settings
 echo
+read -p "[?] Are you in a laptop? [y/n]" LAPTOP
 read -p "[?] Hostname: " HOSTNAME
 read -p "[?] USERNAME: " USERNAME
 
@@ -98,4 +99,69 @@ mkswap "${DISK}2"
 mkfs.ext4 "${DISK}3"
 mkfs.ext4 "${DISK}4"
 
+# Mounting partitions
+echo "[+] Mounting partitions"
+mount "${DISK}3" /mnt
+mkdir /mnt/home
+if [[ "$BOOT_MODE" == "UEFI" ]]; then
+	mkdir -p /mnt/boot/efi
+	mount "${DISK}1" /mnt/boot/efi
+else
+	mkdir /mnt/boot
+	mount "${DISK}1" /mnt/boot
+fi
+mount "${DISK}4" /mnt/home
+
+# Installing base system
+echo "[+] Installing base system"
+if [ "$BOOT_MODE" = "UEFI" ]; then
+	pacstrap /mnt base base-devel efibootmgr os-prober ntfs-3g networkmanager grub gvfs gvfs-afc gvfs-mtp xdg-user-dirs linux linux-firmware nano dhcpcd zsh
+else
+	pacstrap /mnt base base-devel grub os-prober ntfs-3g networkmanager gvfs gvfs-afc gvfs-mtp xdg-user-dirs linux linux-firmware nano dhcpcd zsh
+fi
+
+if [ "$LAPTOP" == "y" ]; then
+	pacstrap /mnt netctl wpa_supplicant dialog xf86-input-synaptics
+fi
+
+genfstab -pU /mnt >> /mnt/etc/fstab
+
+# Selecting lang
+echo "[!] Please type: 'nano /etc/locale.gen' then select your preferred language, finally type 'exit'"
+echo 
+arch-chroot /mnt
+
+arch-chroot /mnt /bin/bash -e <<EOF
+hwclock -w
+echo "$KEYMAP" > /etc/vconsole.conf
+echo "$HOSTNAME" > /etc/hostname
+
+echo "[+] Generating locales..."
+locale-gen
+
+systemctl enable NetworkManager
+
+useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/zsh "$USERNAME"
+echo "$USERNAME:$USERPASS" | chpasswd
+echo "root:$ROOTPASS" | chpasswd
+echo "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers
+
+if [ "$BOOT_MODE" = "UEFI" ]; then
+	grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable
+else
+	grub-install "$DISK"
+fi
+grub-mkconfig -o /boot/grub/grub.cfg
+EOF
+
+if [ "$BOOT_MODE" = "UEFI" ]; then
+	umount /mnt/boot/efi
+else
+	umount /mnt/boot
+fi
+
+umount /mnt/home
+umount /mnt
+
+echo "[!] Please reboot the system"
 
