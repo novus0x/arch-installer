@@ -26,7 +26,7 @@ fi
 
 # User settings
 echo
-read -p "[?] Are you in a laptop? [y/n]" LAPTOP
+read -p "[?] Are you in a laptop? [y/n]: " LAPTOP
 read -p "[?] Hostname: " HOSTNAME
 read -p "[?] USERNAME: " USERNAME
 
@@ -115,9 +115,9 @@ mount "${DISK}4" /mnt/home
 # Installing base system
 echo "[+] Installing base system"
 if [ "$BOOT_MODE" = "UEFI" ]; then
-	pacstrap /mnt base base-devel efibootmgr os-prober ntfs-3g networkmanager grub gvfs gvfs-afc gvfs-mtp xdg-user-dirs linux linux-firmware nano dhcpcd zsh
+	pacstrap /mnt base base-devel efibootmgr os-prober ntfs-3g networkmanager grub gvfs gvfs-afc gvfs-mtp xdg-user-dirs linux linux-firmware nano dhcpcd zsh kitty
 else
-	pacstrap /mnt base base-devel grub os-prober ntfs-3g networkmanager gvfs gvfs-afc gvfs-mtp xdg-user-dirs linux linux-firmware nano dhcpcd zsh
+	pacstrap /mnt base base-devel grub os-prober ntfs-3g networkmanager gvfs gvfs-afc gvfs-mtp xdg-user-dirs linux linux-firmware nano dhcpcd zsh kitty
 fi
 
 if [ "$LAPTOP" == "y" ]; then

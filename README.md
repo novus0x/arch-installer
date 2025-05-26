@@ -6,6 +6,9 @@ This project provides an **automated Arch Linux installation script** designed t
 
 [!] is currently under testing 
 
+- Tested in BIOS [yes]
+- Tested in UEFI [no]
+
 ---
 
 ## 🚀 What does this script do?
@@ -29,7 +32,7 @@ These packages are installed during the minimal installation:
 - `sudo`, `grub`, `efibootmgr` (if UEFI)
 - `NetworkManager` (activated automatically)
 - Regional, timezone, and user settings
-- Automatic partitioning with `sgdisk`, formatting with `mkfs.fat` and `mkfs.ext4`
+- Automatic partitioning with `parted`, formatting with `mkfs.fat` and `mkfs.ext4`
 
 ---
 
@@ -45,7 +48,7 @@ These packages are installed during the minimal installation:
 2. From the live environment:
 
 ```bash
-curl -O https://raw.githubusercontent.com/novus0x/arch-installer/refs/heads/main/arch-install.sh
-chmod +x arch-install.sh
+curl -O https://raw.githubusercontent.com/novus0x/arch-installer/refs/heads/main/installer.sh
+chmod +x installer.sh
 ./arch-install.sh
 ```
