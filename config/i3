@@ -4,14 +4,14 @@ set $mod Mod4
 font pango:JetBrainsMono Nerd Font 10
 
 # KEYMAP
-exec_always --no-startup-id setxkbmap -layout es
+exec_always --no-startup-id setxkbmap -layout us
 
 # exec_always --no-startup-id feh --bg-scale ~/wallpaper/idk.jpg
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 exec_always --no-startup-id picom --config ~/.config/picom/picom.conf
 
 # Terminal
-bindsym $mod+Return exec kitty
+bindsym $mod+Return exec alacritty
 
 # Close
 bindsym $mod+q kill
@@ -69,7 +69,7 @@ client.focused		#1d1f21 #1d1f21 #ffffff #00ff00
 client.unfocused	#1d1f21 #1d1f21 #888888 #444444
 
 gaps inner 10
-#gaps outer 10
+gaps outer 10
 
 for_window [class=".*"] border none
 

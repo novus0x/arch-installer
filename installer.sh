@@ -29,7 +29,7 @@ echo
 echo "[!] Default KEYMAP: us"
 read -p "[?] Do you want to change it? [y/n]: " OPT
 
-if [[ "$OPT" == "y"]]
+if [[ "$OPT" == "y"]]; then
 	read -p "[?] New KEYMAP: " KEYMAP
 else
 	KEYMAP="us"
@@ -127,9 +127,9 @@ mount "${DISK}4" /mnt/home
 # Installing base system
 echo "[+] Installing base system"
 if [ "$BOOT_MODE" = "UEFI" ]; then
-	pacstrap /mnt base base-devel efibootmgr os-prober ntfs-3g networkmanager grub gvfs gvfs-afc gvfs-mtp xdg-user-dirs linux linux-firmware nano dhcpcd zsh kitty
+	pacstrap /mnt base base-devel efibootmgr os-prober ntfs-3g networkmanager grub gvfs gvfs-afc gvfs-mtp xdg-user-dirs linux linux-firmware nano dhcpcd zsh alacritty
 else
-	pacstrap /mnt base base-devel grub os-prober ntfs-3g networkmanager gvfs gvfs-afc gvfs-mtp xdg-user-dirs linux linux-firmware nano dhcpcd zsh kitty
+	pacstrap /mnt base base-devel grub os-prober ntfs-3g networkmanager gvfs gvfs-afc gvfs-mtp xdg-user-dirs linux linux-firmware nano dhcpcd zsh alacritty
 fi
 
 if [ "$LAPTOP" == "y" ]; then
