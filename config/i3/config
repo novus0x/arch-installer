@@ -1,0 +1,77 @@
+set $alt Mod1
+set $mod Mod4
+
+font pango:JetBrainsMono Nerd Font 10
+
+# KEYMAP
+exec_always --no-startup-id setxkbmap -layout es
+
+# exec_always --no-startup-id feh --bg-scale ~/wallpaper/idk.jpg
+exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec_always --no-startup-id picom --config ~/.config/picom/picom.conf
+
+# Terminal
+bindsym $mod+Return exec kitty
+
+# Close
+bindsym $mod+q kill
+
+# Fullscreen
+bindsym $mod+f fullscreen toggle
+
+# Browser
+bindsym $mod+Shift+f exec firefox
+
+# Rofi
+bindsym $mod+d exec rofi -show drun
+
+# Float
+bindsym $mod+Shift+space floating toggle
+
+# Reload i3
+bindsym $mod+Shift+r restart
+
+# Close i3
+bindsym $mod+Shift+e exit
+
+# Move
+bindsym $alt+Left focus left
+bindsym $alt+Right focus right
+bindsym $alt+Up focus up
+bindsym $alt+Down focus down
+
+# Workspaces
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+
+# Change workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+
+# Move window to another workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+
+# Touchpad
+exec_always --no-startup-id xinput set-prop "Device Name" "libinput Tapping Enabled" 1
+
+# Styles
+client.focused		#1d1f21 #1d1f21 #ffffff #00ff00
+client.unfocused	#1d1f21 #1d1f21 #888888 #444444
+
+gaps inner 10
+#gaps outer 10
+
+for_window [class=".*"] border none
+
+# Save on reboot
+exec_always --no-startup-id xrdb -merge ~/.Xresources

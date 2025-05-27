@@ -1,0 +1,66 @@
+/*General*/
+window {
+	background-color: transparent;
+	font-family: "JetBrainsMono", "Fira Code", monospace;
+	color: #00ff00;
+}
+
+/*Login container*/
+.login-dialog {
+	background-color: rgba(20, 20, 20, 0.9);
+	border: 2px solid #00ff00;
+	border-radius: 10px;
+	padding: 25px;
+	box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+	min-width: 400px;
+}
+
+/*Inputs*/
+entry {
+	background-color: rgba(0, 0, 0, 0.85);
+	border: 1px solid #00aa00;
+	border-radius: 5px;
+	padding: 6px;
+	color: #00ff00;
+	font-size: 14px;
+}
+
+entry:focus {
+	border-color: #00ff00;
+	background-color: rgba(0, 0, 0, 0.95);
+}
+
+/*Labels*/
+label {
+	color: #00ff00;
+	font-weight: bold;
+	font-size: 15px;
+}
+
+/*Buttons*/
+button {
+	background-color: transparent;
+	border: 1px solid #00ff00;
+	border-radius: 4px;
+	color: #00ff00;
+	padding: 6px 12px;
+	font-weight: bold;
+	font-size: 14px;
+	transition: all 0.2s ease;
+}
+
+button:hover {
+	background-color: #00ff00;
+	color: #000000 !important;
+	border-color: #00cc00;
+	box-shadow: 0 0 10px #00ff00;
+}
+
+/*Avatar img*/
+#greeter-user-icon {
+	border: 2px solid #00ff00;
+	border-radius: 50%;
+	margin-bottom: 10px;
+	box-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+}
+
