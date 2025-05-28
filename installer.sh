@@ -133,7 +133,7 @@ else
 fi
 
 if [ "$LAPTOP" == "y" ]; then
-	pacstrap /mnt netctl wpa_supplicant dialog xf86-input-synaptics
+	pacstrap /mnt netctl wpa_supplicant dialog xf86-input-synaptics iw
 fi
 
 genfstab -pU /mnt >> /mnt/etc/fstab
