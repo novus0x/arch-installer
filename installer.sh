@@ -29,7 +29,7 @@ echo
 echo "[!] Default KEYMAP: us"
 read -p "[?] Do you want to change it? [y/n]: " OPT
 
-if [[ "$OPT" == "y"]]; then
+if [[ "$OPT" == "y" ]]; then
 	read -p "[?] New KEYMAP: " KEYMAP
 else
 	KEYMAP="us"
