@@ -42,7 +42,7 @@ def main():
     cprint("[+] Installing OhMyZSH", "green")
     subprocess.run(["curl", "-LO", "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"])
     subprocess.run(["chmod", "+x", "./install.sh"])
-    subprocess.run(["./install.sh"])
+    subprocess.run(["./install.sh --unattended"])
     subprocess.run(["rm", "-r", "./install.sh"])
     cprint("[+] Adding sudo, zsh-autosuggestions and zsh-syntax-highlighting plugins", "green")
     subprocess.run(["sudo", "mkdir", "-p", "/usr/share/zsh/plugins/sudo-plugin"])
