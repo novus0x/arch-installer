@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, subprocess
+import os, sys, subprocess
 
 from termcolor import colored, cprint
 
@@ -8,6 +8,7 @@ banner = subprocess.run(["toilet", "-f", "smblock", "Dotfiles Installer\n\t\tby 
 
 # Config
 packages = ["xorg", "xorg-server", "xorg-xinit", "xorg-xrandr", "xorg-xsetroot", "mesa", "lightdm", "lightdm-gtk-greeter", "neovim", "i3", "i3-gaps", "i3lock", "polybar", "picom", "rofi", "pulseaudio", "playerctl", "feh", "net-tools", "upower", "bat", "lsd", "lua-language-server", "go", "ttf-fira-code", "ttf-jetbrains-mono-nerd", "ttf-dejavu", "ttf-font-awesome"]
+home_dir = os.path.expanduser("~/.config/")
 
 # Main function
 def main():
@@ -29,11 +30,11 @@ def main():
     cprint("[+] Adding Novus0x theme in /usr/share/themes", "green")
     subprocess.run(["sudo", "cp", "-r", "./config/Novus0x" ,"/usr/share/themes/"])
     cprint("[+] Adding files to ~/.config", "green")
-    subprocess.run(["cp", "-r", "./config/i3", "~/.config/"])
-    subprocess.run(["cp", "-r", "./config/nvim", "~/.config/"])
-    subprocess.run(["cp", "-r", "./config/picom", "~/.config/"])
-    subprocess.run(["cp", "-r", "./config/polybar", "~/.config/"])
-    subprocess.run(["cp", "-r", "./config/alacritty", "~/.config/"])
+    subprocess.run(["cp", "-r", "./config/i3", home_dir])
+    subprocess.run(["cp", "-r", "./config/nvim", home_dir])
+    subprocess.run(["cp", "-r", "./config/picom", home_dir])
+    subprocess.run(["cp", "-r", "./config/polybar", home_dir])
+    subprocess.run(["cp", "-r", "./config/alacritty", home_dir])
     subprocess.run(["sudo", "mkdir", "-p", "/usr/share/backgrounds"])
     subprocess.run(["sudo", "cp", "-r", "./config/login-background.jpg", "/usr/share/backgrounds/login-background.jpg"])
     
