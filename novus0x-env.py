@@ -39,8 +39,6 @@ def main():
     cprint("[+] Adding background", "green")
     subprocess.run(["sudo", "mkdir", "-p", "/usr/share/backgrounds"])
     subprocess.run(["sudo", "cp", "-r", "./config/login-background.jpg", "/usr/share/backgrounds/login-background.jpg"])
-    cprint("[+] Adding .zshrc file", "green")
-    subprocess.run(["cp", "-r", "./config/.zshrc", home_dir])
     cprint("[+] Installing OhMyZSH", "green")
     subprocess.run(["curl", "-LO", "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"])
     subprocess.run(["chmod", "+x", "./install.sh"])
@@ -53,6 +51,8 @@ def main():
     subprocess.run(["sudo", "pacman", "-S", "--noconfirm","zsh-syntax-highlighting", "zsh-autosuggestions"])
     cprint("[+] Installing PowerLevel10K", "green")
     subprocess.run(["git", "clone", "--depth=1", "https://github.com/romkatv/powerlevel10k.git", "~/powerlevel10k"])
+    cprint("[+] Adding .zshrc file", "green")
+    subprocess.run(["cp", "-r", "./config/.zshrc", home_dir])
 
 if __name__ == "__main__":
     main()
