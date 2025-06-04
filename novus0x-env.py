@@ -42,7 +42,7 @@ def main():
     cprint("[+] Installing OhMyZSH", "green")
     subprocess.run(["curl", "-LO", "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"])
     subprocess.run(["chmod", "+x", "./install.sh"])
-    subprocess.run(["./install.sh --unattended"])
+    subprocess.run(["./install.sh", "--unattended"])
     subprocess.run(["rm", "-r", "./install.sh"])
     cprint("[+] Adding sudo, zsh-autosuggestions and zsh-syntax-highlighting plugins", "green")
     subprocess.run(["sudo", "mkdir", "-p", "/usr/share/zsh/plugins/sudo-plugin"])
@@ -53,6 +53,7 @@ def main():
     subprocess.run(["git", "clone", "--depth=1", "https://github.com/romkatv/powerlevel10k.git", "~/powerlevel10k"])
     cprint("[+] Adding .zshrc file", "green")
     subprocess.run(["cp", "-r", "./config/.zshrc", home_dir])
+    cprint("[+] Dotfiles installed successfully", "green")
 
 if __name__ == "__main__":
     main()

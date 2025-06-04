@@ -11,7 +11,7 @@ This project provides an **automated Arch Linux installation script** designed t
 
 ---
 
-## 🚀 What does this script do?
+## 🚀 What does this script do? (installer.sh)
 
 ✅ Automates the installation of Arch Linux from scratch.
 ✅ Detects whether the system is in **UEFI** or **BIOS (Legacy)** mode.
@@ -69,3 +69,25 @@ chmod +x installer.sh
 ./arch-install.sh
 ```
 
+## 🎨 Automatic installation of custom Dotfiles (novus0x-env.py)
+
+A new file called `novus0x-env.py` is now included, which allows the theme and configuration combination I created to be automatically installed.
+
+This script:
+
+- Copies custom configuration files from .config to the user's system.
+- Applies desktop themes, window configurations, terminal, and other predefined settings.
+- Provides a post-installation visual consistency with my work environment.
+
+## Recommended usage
+
+Make sure you have the necessary packages installed, and run the script as the normal user
+
+```
+sudo pacman -S python python-pip git toiled
+git clone https://github.com/novus0x/arch-installer
+python -m venv env
+source env/bin/activate
+pip3 install -r requirements.txt
+python3 novus0x-env.py
+```
