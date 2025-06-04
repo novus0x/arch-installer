@@ -4,7 +4,7 @@ set $mod Mod4
 font pango:JetBrainsMono Nerd Font 10
 
 # KEYMAP
-exec_always --no-startup-id setxkbmap -layout us
+exec_always --no-startup-id setxkbmap us
 
 # exec_always --no-startup-id feh --bg-scale ~/wallpaper/idk.jpg
 exec_always --no-startup-id ~/.config/polybar/launch.sh
@@ -63,6 +63,11 @@ bindsym $mod+Shift+5 move container to workspace $ws5
 
 # Touchpad
 exec_always --no-startup-id xinput set-prop "Device Name" "libinput Tapping Enabled" 1
+
+# Audio controllers
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
 
 # Styles
 client.focused		#1d1f21 #1d1f21 #ffffff #00ff00
