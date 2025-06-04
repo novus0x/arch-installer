@@ -26,6 +26,16 @@ def main():
     cprint("[+] Adding lightdm configurations", "green")
     subprocess.run(["sudo", "cp", "-r", "./config/lightdm/lightdm.conf", "/etc/lightdm/lightdm.conf"])
     subprocess.run(["sudo", "cp", "-r", "./config/lightdm/lightdm-gtk-greeter.conf", "/etc/lightdm/lightdm-gtk-greeter.conf"])
-
+    cprint("[+] Adding Novus0x theme in /usr/share/themes", "green")
+    subprocess.run(["sudo", "cp", "-r", "./config/Novus0x" ,"/usr/share/themes/"])
+    cprint("[+] Adding files to ~/.config", "green")
+    subprocess.run(["cp", "-r", "./config/i3", "~/.config/"])
+    subprocess.run(["cp", "-r", "./config/nvim", "~/.config/"])
+    subprocess.run(["cp", "-r", "./config/picom", "~/.config/"])
+    subprocess.run(["cp", "-r", "./config/polybar", "~/.config/"])
+    subprocess.run(["cp", "-r", "./config/alacritty", "~/.config/"])
+    subprocess.run(["sudo", "mkdir", "-p", "/usr/share/backgrounds"])
+    subprocess.run(["sudo", "cp", "-r", "./config/login-background.jpg", "/usr/share/backgrounds/login-background.jpg"])
+    
 if __name__ == "__main__":
     main()
