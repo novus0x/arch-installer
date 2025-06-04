@@ -79,7 +79,7 @@ read -p "[?] ROOT partiton: " ROOT_SIZE
 HOME_SIZE=$((sizeMB - (BOOT_SIZE + SWAP_SIZE + ROOT_SIZE)))
 
 if (( (BOOT_SIZE + SWAP_SIZE + ROOT_SIZE + HOME_SIZE) > total_size )); then
-    echo "[-] An error ocurre!"
+    echo "[-] An error ocurred!"
 	exit 1
 fi
 

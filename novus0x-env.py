@@ -8,7 +8,8 @@ banner = subprocess.run(["toilet", "-f", "smblock", "Dotfiles Installer\n\t\tby 
 
 # Config
 packages = ["xorg", "xorg-server", "xorg-xinit", "xorg-xrandr", "xorg-xsetroot", "mesa", "lightdm", "lightdm-gtk-greeter", "neovim", "i3", "i3-gaps", "i3lock", "polybar", "picom", "rofi", "pulseaudio", "playerctl", "feh", "net-tools", "upower", "bat", "lsd", "lua-language-server", "go", "ttf-fira-code", "ttf-jetbrains-mono-nerd", "ttf-dejavu", "ttf-font-awesome"]
-home_dir = os.path.expanduser("~/.config/")
+home_dir = os.path.expanduser("~/")
+config_dir = os.path.expanduser("~/.config/")
 
 # Main function
 def main():
@@ -30,13 +31,22 @@ def main():
     cprint("[+] Adding Novus0x theme in /usr/share/themes", "green")
     subprocess.run(["sudo", "cp", "-r", "./config/Novus0x" ,"/usr/share/themes/"])
     cprint("[+] Adding files to ~/.config", "green")
-    subprocess.run(["cp", "-r", "./config/i3", home_dir])
-    subprocess.run(["cp", "-r", "./config/nvim", home_dir])
-    subprocess.run(["cp", "-r", "./config/picom", home_dir])
-    subprocess.run(["cp", "-r", "./config/polybar", home_dir])
-    subprocess.run(["cp", "-r", "./config/alacritty", home_dir])
+    subprocess.run(["cp", "-r", "./config/i3", config_dir])
+    subprocess.run(["cp", "-r", "./config/nvim", config_dir])
+    subprocess.run(["cp", "-r", "./config/picom", config_dir])
+    subprocess.run(["cp", "-r", "./config/polybar", config_dir])
+    subprocess.run(["cp", "-r", "./config/alacritty", config_dir])
+    cprint("[+] Adding background", "green")
     subprocess.run(["sudo", "mkdir", "-p", "/usr/share/backgrounds"])
     subprocess.run(["sudo", "cp", "-r", "./config/login-background.jpg", "/usr/share/backgrounds/login-background.jpg"])
-    
+    cprint("[+] Adding .zshrc file", "green")
+    subprocess.run(["cp", "-r", "./config/.zshrc", home_dir])
+    cprint("[+] Installing OhMyZSH", "green")
+    subprocess.run(["sh", "-c", "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"], check=True)
+    cprint("[+] Adding sudo, zsh-autosuggestions and zsh-syntax-highlighting plugins", "green")
+    subprocess.run(["sudo", "mkdir", "-p", "/usr/share/zsh/plugins/sudo-plugin"])
+    subprocess.run(["sudo", "curl", "-O", "https://raw.githubusercontent.com/triplepointfive/oh-my-zsh/refs/heads/master/plugins/sudo/sudo.plugin.zsh", "/usr/share/zsh/plugins/sudo-plugin/"])
+    subprocess.run(["sudo", "pacman", "-S", "--noconfirm","zsh-syntax-highlighting", "zsh-autosuggestions"])
+
 if __name__ == "__main__":
     main()
